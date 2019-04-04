@@ -15,6 +15,7 @@ class FtpClient(object):
 
     def interactive(self):
         while True:
+            # 此路径为需要上传到服务端文件夹
             fileName = "/Users/papi/Desktop/clientFile"
             # 判断文件夹是否被修改（根据文件夹修改时间判断）
             if self.lastFilemtimeMax != os.path.getmtime(fileName):
@@ -42,6 +43,13 @@ class FtpClient(object):
                         fname_path = root + '/' + fname
                         if os.path.isfile(fname_path):
                             filesize = os.stat(fname_path).st_size
+                            # serverFilePath 为服务端文件夹路劲
+                            # 若服务端为win端则需要提供win文件夹目录
+                            # win('\')和linux('/')文件夹分割符号相反，可通过PureWindowsPath转化
+                            # 导入 from pathlib import Path, PureWindowsPath
+                            # PureWindowsPath用法
+                            # if (platform.system() == 'Windows'):
+                            #       fileNamePath = PureWindowsPath(msg_dict['filename'])
                             serverFilePath = fname_path.replace('clientFile', '随便文件夹')
                             msg_dic = {
                                 'action':'put',

@@ -12,13 +12,16 @@ class FtpHandler(socketserver.BaseRequestHandler):
         fileNamePath = msg_dict['fileNamePath']
         fileName = msg_dict['fileName']
         if (platform.system() == 'Windows'):
+            # 判断当前系统，去获取文件夹路劲
             fileNamePath = PureWindowsPath(msg_dict['filename'])
         filesize = msg_dict['filesize']
+        
         if os.path.isfile(fileNamePath):
             f = open(fileNamePath,'wb')
         else:
             pathDir = fileNamePath.replace(('/' + fileName), '')
             if not os.path.exists(pathDir):
+                # 判断pathDir文件夹路劲是否存在，不存在新建文件夹
                 os.makedirs(pathDir)
             f = open(fileNamePath, 'wb')
         self.request.send(b'200 ok')
@@ -61,8 +64,7 @@ class FtpHandler(socketserver.BaseRequestHandler):
                     func = getattr(self,'cmd_%s'%cmd)
                     func(msg_dict)
             else:
-                print("nothing is received...")    
-                self.request.send(b'nothing')
+                print("nothing is received...")
 
 
 
